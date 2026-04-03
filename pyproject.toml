@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "splent_feature_nginx"
-version = "1.0.0"
+version = "1.0.1"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = []
@@ -53,7 +53,7 @@ services   = ["splent_feature_nginx"]
 ports      = ["${NGINX_HTTPS_HOST_PORT}:443", "${NGINX_HTTP_HOST_PORT}:80"]
 volumes    = ["certbot_webroot", "letsencrypt"]
 networks   = ["splent_network"]
-build      = false
+build      = true
 healthcheck = false
 
 [tool.splent.contract.docker.depends_on]
