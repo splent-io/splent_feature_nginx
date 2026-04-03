@@ -1,0 +1,5 @@
+# Jinja templates (feature views + hook fragments)
+recursive-include src/splent_io/splent_feature_nginx/templates *.html
+
+# Alembic migration config and scripts
+recursive-include src/splent_io/splent_feature_nginx/migrations *.py *.ini *.mako

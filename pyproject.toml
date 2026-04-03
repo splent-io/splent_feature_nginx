@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=80.3.1", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "splent_feature_nginx"
+version = "1.0.0"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+exclude = ["*.tests", "*.tests.*"]
+
+[tool.splent]
+cli_version = "1.4.5"
+
+# ── Feature Contract (auto-generated) ────────────────────────────────────────
+# Do not edit manually — re-run `splent feature:contract --write` to refresh.
+[tool.splent.contract]
+description = "Nginx reverse proxy — routes traffic to the product web service"
+
+[tool.splent.contract.provides]
+routes     = []
+blueprints = []
+models     = []
+commands   = []
+hooks      = ["layout.authenticated_sidebar"]
+services   = []
+signals    = []
+translations = []
+docker     = ["docker-compose.dev.yml", "docker-compose.prod.yml"]
+
+[tool.splent.contract.requires]
+features = []
+env_vars = ["NGINX_HTTPS_HOST_PORT", "NGINX_HTTP_HOST_PORT", "NGINX_SERVER_NAME"]
+signals  = []
+
+[tool.splent.contract.extensible]
+services  = []
+templates = []
+models    = []
+hooks     = ["layout.authenticated_sidebar"]
+routes    = false
+
+[tool.splent.contract.docker]
+services   = ["splent_feature_nginx"]
+ports      = ["${NGINX_HTTPS_HOST_PORT}:443", "${NGINX_HTTP_HOST_PORT}:80"]
+volumes    = ["certbot_webroot", "letsencrypt"]
+networks   = ["splent_network"]
+build      = false
+healthcheck = false
+
+[tool.splent.contract.docker.depends_on]
+services = []

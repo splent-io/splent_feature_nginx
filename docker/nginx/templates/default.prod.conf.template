@@ -1,0 +1,23 @@
+upstream app {
+    server ${NGINX_UPSTREAM_HOST}:${NGINX_UPSTREAM_PORT};
+}
+
+server {
+    listen 80;
+    server_name ${NGINX_SERVER_NAME};
+
+    client_max_body_size 20M;
+
+    # Certbot ACME challenge (used by splent_feature_certbot)
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        proxy_pass http://app;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
