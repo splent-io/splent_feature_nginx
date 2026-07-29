@@ -4,12 +4,22 @@ services:
     restart: always
     ports:
       - "${NGINX_HTTP_HOST_PORT}:80"
+    # Location snippets are contributed by dropping *.conf files in the
+    # locations directory below, which in dev is the feature checkout
+    # itself. A compose fragment from another feature cannot do this,
+    # because product:up runs each feature compose as its own project and
+    # merge_compose replaces same-named services wholesale.
     volumes:
       - ${NGINX_FEATURE_HOST_DIR}/docker/nginx/templates/default.dev.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - ${NGINX_FEATURE_HOST_DIR}/docker/nginx/locations:/etc/nginx/conf.d/locations:ro
+      - ${NGINX_FEATURE_HOST_DIR}/docker/nginx/docker-entrypoint.d/15-splent-trusted-proxies.sh:/docker-entrypoint.d/15-splent-trusted-proxies.sh:ro
     environment:
       - NGINX_UPSTREAM_HOST=${NGINX_UPSTREAM_HOST}
       - NGINX_UPSTREAM_PORT=${NGINX_UPSTREAM_PORT}
       - NGINX_SERVER_NAME=${NGINX_SERVER_NAME}
+      # Empty means no peer may assert X-Forwarded-* headers. Fill it in
+      # only when a TLS terminator on the host fronts this container.
+      - NGINX_TRUSTED_PROXY_CIDRS=${NGINX_TRUSTED_PROXY_CIDRS:-}
     networks:
       - splent_network
 
